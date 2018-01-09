@@ -1,20 +1,281 @@
 <html>
 <script type="text/javascript">
-function myFunction() {
-  var x = document.getElementById("myDIV");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
+var currentQuestion = 0;
+var currentScore = 0;
+var r = "Correct! Good Job!";
+var w = "Not Quite! Better Luck Next Time!";
+var startQuizTitle = "HYDRONATION";
+var startQuizInstructions = "... Here is where the instructions for the game are displayed ...\n\n";
+var endQuizTitle = "Congratulations!"
+
+document.getElementById("Report").style.display = "none";
+document.getElementById("actionButton").style.display = "none";
+document.getElementById("QuestionList").style.display = "none";
+
+var questionsArray = [
+  // Questoin 0
+  { question: "What is a water footprint?",
+    answers: [
+      { isCorrect: true,  answerValue: "How much water you use over a certain period of time"},
+      { isCorrect: false, answerValue: "A footprint in the mud" },
+      { isCorrect: false, answerValue: "How much water you drink over a certain period of time"}
+    ],
+    correctAnswerExplanation:   "You earned 100 points!",
+    incorrectAnswerExplanation: "A water footprint is the amount of water you use in your daily life."
+  },
+  
+  // Question 1
+  { question: "How much water do you use when you leave the tap on for 2 minutes?",
+    answers: [
+      { isCorrect: false, answerValue: "2 gallons"},
+      { isCorrect: true,  answerValue: "3 gallons"},
+      { isCorrect: false, answerValue: "5 gallons"}
+    ],
+    correctAnswerExplanation:  "You earned 100 points!",
+    incorrectAnswerExplanation: "You will only use about 3 gallons of water when you brush your teeth for 2 minutes."
+  },
+  
+  // Question 2
+  { question: "You want to choose a protein to eat for lunch.  Which of the following takes the least water to make?", 
+    answers: [
+      { isCorrect: false, answerValue: "Hamburger"},
+      { isCorrect: false,  answerValue: "Chicken"},
+      { isCorrect: true, answerValue: "10 Candied Walnuts"}
+    ],
+    correctAnswerExplanation:  "You earned 100 points!",
+    incorrectAnswerExplanation: "Walnuts take less water than the other options; but they still take up a lot of water!"},
+  
+  // Question 3
+  { question: "You are going to the gardening store, and want to buy a water saving product. Which would you pick to save the most water?", 
+    answers: [
+      { isCorrect: true, answerValue: "Artificial Turf"},
+      { isCorrect: false,  answerValue: "Drip Irrigation"},
+      { isCorrect: false, answerValue: "Succulents"}
+    ],
+    correctAnswerExplanation:  "You earned 100 points!",
+    incorrectAnswerExplanation: "Drip Irrigation systems save 20% to 50% of water compared to regular sprinklers.  Artificial turf saves 44000 ???? TBD"},
+  
+// Question 4
+  { question: "Which dinner item do you think takes the least amount of water to make?", 
+    answers: [
+      { isCorrect: true, answerValue: "1/2 lb of Spaghetti"},
+      { isCorrect: false,  answerValue: "3 slices of Pizza"},
+      { isCorrect: false, answerValue: "1 Burger"}
+    ],
+    correctAnswerExplanation:  "You earned 100 points!",
+    incorrectAnswerExplanation: "1/2 lb. of Spaghetti takes up less water than the other options.  3 slices of Pizza needs 126 gallons of water,  1 burger takes up 1300 of water, and 1/2 lb. of Spaghetti takes up 111 gallons of water!"},
+  
+];
+
+// Called at game start...
+function startQuestion() {
+  var actButton = document.getElementById("actionButton");
+  
+  document.getElementById("TitleText").style.visibility = "hidden";
+  
+  console.log(currentQuestion);
+  document.getElementById("QuestionList").style.visibility = "hidden";
+
+  document.getElementById("TitleText").innerHTML = startQuizTitle;
+  document.getElementById("TitleText").style.visibility = "visible";
+
+  console.log(startQuizInstructions);
+  document.getElementById("Report").innerHTML= startQuizInstructions;
+  document.getElementById("Report").style.display = "block";
+  document.getElementById("TitleText").style.visibility = "visible";
+
+  actButton.innerHTML = "GO!";
+  actButton.style.display = "block";
+  actButton.onclick = nextQuestion;
 }
+
+function nextQuestion() {
+  var actButton = document.getElementById("actionButton");
+  if (currentQuestion == questionsArray.length) {
+    endQuestion();
+  } else {
+    document.getElementById("Report").style.visibility = "hidden"
+    document.getElementById("Report").style.display = "none";
+    actButton.style.display = "none";
+    questionLoad();
+  }
+
+  document.getElementById("TitleText").style.visibility = "visible";
+}
+
+function endQuestion() {
+  document.getElementById("TitleText").innerHTML = endQuizTitle;
+  document.getElementById("Report").innerHTML = "You finished with... " + currentScore + " points!";
+  document.getElementById("actionButton").style.display = "none";
+}
+
+function questionLoad() {
+  //console.log("got to questionLoad");
+
+  document.getElementById("Score").innerHTML = "Score: " + currentScore;
+  
+  document.getElementById("TitleText").innerHTML = questionsArray[currentQuestion].question;
+  
+  var button1 = document.getElementById("Button1");
+  var button2 = document.getElementById("Button2");
+  var button3 = document.getElementById("Button3");
+  var currentQuestionEntry = questionsArray[currentQuestion];
+  
+  button1.innerHTML = currentQuestionEntry.answers[0].answerValue;
+  button2.innerHTML = currentQuestionEntry.answers[1].answerValue;
+  button3.innerHTML = currentQuestionEntry.answers[2].answerValue;
+  
+  console.log("showing questions...")
+  document.getElementById("QuestionList").style.display = "block";
+  document.getElementById("QuestionList").style.visibility = "visible";
+  
+  if(currentQuestionEntry.answers[0].isCorrect) { button1.onclick = submitCorrectAnswer; } else { button1.onclick = submitIncorrectAnswer;} 
+  if(currentQuestionEntry.answers[1].isCorrect) {button2.onclick = submitCorrectAnswer;} else {button2.onclick = submitIncorrectAnswer;}
+  if(currentQuestionEntry.answers[2].isCorrect) {button3.onclick = submitCorrectAnswer;} else {button3.onclick = submitIncorrectAnswer;}
+  
+} 
+
+function submitCorrectAnswer() {
+  console.log("Got to submitCorrectAnswer with currentQuestion now set to " + currentQuestion);
+
+  nextQuestion();
+  var currentQuestionEntry = questionsArray[currentQuestion]; 
+  
+  currentScore += 100;
+  document.getElementById("Score").innerHTML = "Score: " + currentScore;
+
+  document.getElementById("QuestionList").style.display = "none";
+  document.getElementById("TitleText").style.visibility = "hidden";
+  document.getElementById("TitleText").innerHTML = r;
+  document.getElementById("TitleText").style.visibility = "visible";
+  document.getElementById("Report").innerHTML = currentQuestionEntry.correctAnswerExplanation + " ... " + currentQuestionEntry.incorrectAnswerExplanation;
+  document.getElementById("Report").style.display = "block";
+  document.getElementById("Report").style.visibility = "visible";
+  document.getElementById("actionButton").innerHTML = "Next";
+  document.getElementById("actionButton").style.display = "block";
+  
+  currentQuestion++;
+}
+
+function submitIncorrectAnswer() {
+  //console.log("Got to submitIncorrectAnswer with currentQuestion now set to " + currentQuestion);
+  var currentQuestionEntry = questionsArray[currentQuestion];
+
+  nextQuestion();
+  document.getElementById("QuestionList").style.display = "none";
+  document.getElementById("TitleText").style.visibility = "hidden";
+  document.getElementById("TitleText").innerHTML = w;
+  document.getElementById("TitleText").style.visibility = "visible";
+  document.getElementById("Report").innerHTML= currentQuestionEntry.incorrectAnswerExplanation;
+  document.getElementById("Report").style.display = "block";
+  document.getElementById("Report").style.visibility = "visible";
+  document.getElementById("actionButton").innerHTML = "Next";
+  document.getElementById("actionButton").style.display = "block";
+  
+  currentQuestion++;
+}
+
 </script>
 
-<body>
-<button onclick="myFunction()">Click Me</button>
+  <style>
+    html, body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 36px;
+  background-color: /*#d2edf9*/ #e7efdd;
+  color:  rgba(32,166,231,.8);
+}
 
-<div id="myDIV">
-  This is my DIV element.
-</div>
+#Header {
+  background-color: rgba(32,166,231,.8);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  color: white;
+  margin: 0; 
+  padding: 0;
+}
+
+#RectangleBorder {
+  background-color: rgba(32,166,231,.8);
+  display: grid;
+}
+
+#TitleText {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  font-weight: bold;
+  margin: 30px;
+  font-size: 120%;
+  text-align: center; 
+}
+
+button {
+  font-size: 24px;
+  width: 500px;
+  height: 80px;
+  background: orange;
+  color: white;
+  align-items: center;
+  display: block;
+  justify-content: space-around;
+  //border-width: 0px;
+  border-radius: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+
+#Avatar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+#Report {
+  text-align: center
+}
+
+#actionButton{
+  font-size: 30px
+}
+    
+  </style>
+  
+  <body onload=startQuestion()>
+  <header>
+    <div id="Header">
+      <div id="HomeButton">
+        <img id="HomeImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Home-icon.svg/2000px-Home-icon.svg.png" width=65px height=65px alt="Home">
+      </div>
+
+      <div id="Avatar">
+        <img id="AvatarImage" src="http://clipartix.com/wp-content/uploads/2016/04/Cute-panda-bear-clipart-free-clipart-images.png" width=25% height=100% alt="Avatar">
+      </div>
+      <div id="Score">
+        <p>
+          Score:
+        </p>
+      </div>
+    </div>
+  </header>
+  <div style="height:10px;" id="RectangleBorder"></div>
+  
+   <div id="TitleText">
+      Question 1
+    </div>
+    <div id = "Report"> Report </div>
+  <br>
+    <div>
+      <button id = "actionButton"> Next </button>
+    </div>
+    <div id="QuestionList">
+      <button id="Button1" class="QuestionButton" >Answer 1</button>
+      <button id="Button2" class="QuestionButton" >Answer 2</button>
+      <button id="Button3" class="QuestionButton" >Answer 3</button>
+    </div> 
+
 </body>
 </html>
