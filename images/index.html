@@ -1,0 +1,754 @@
+<html>
+  <head>
+  <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'; media-src *; img-src * filesystem: data:">
+<!-- meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';img-src * 'self' cdvfile://*;  " -->
+  <meta charset="UTF-8">
+  <meta name="description" content="Hydronation Game">
+  <meta name="keywords" content="HTML,CSS,XML,JavaScript">
+  <meta name="author" content="#PandaPower">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script type="text/javascript">
+
+// Link to log sheet: Do not delete.  Not working yet
+// https://script.google.com/macros/s/AKfycbyy-3U4duZ38NiqccfvEAGbOP7uVKmoBu3_077ybRZDexr4eMNJ/exec
+
+const defaultAvatarImage = "images/DefaultUser.png";
+const r = "Correct! Good Job!";
+const w = "Not Quite! Better Luck Next Time!";
+const startQuizTitle = "HYDRONATION";
+const endQuizTitle = "Congratulations!";
+const avatarTitle = "Choose Your Avatar";
+const openingPageReport = "Learn about water footprints and water usage with Hydronation";
+const summaryPageTitle = "HYDRONATION";
+const startQuizInstructions = "This game will take you through a normal day. As your day progresses you will answer questions about your water consumption.";
+
+var currentQuestion = 0;
+var currentScore = 0;
+var mySound;
+
+//document.getElementById("Header").style.visibility = "hidden"
+var avatarSelected = 0;
+var avatarOptions = [
+// Avatar 0
+{
+  name: "panda",
+  url: "images/Panda.png"
+},
+
+// Avatar 1
+{
+  name: "unicorn",
+  url: "images/Unicorn.png"
+},
+
+// Avatar 2
+{
+  name: "elephant",
+  url: "images/Elephant.png"
+},
+
+// Avatar 3
+{
+  name: "lion",
+  url:"images/Lion.png"
+},
+
+// Avatar 4
+{
+  name: "monkey",
+  url: "images/Monkey.png"
+},
+
+// Avatar 5
+{
+  name: "penguin",
+  url: "images/Penguin.png"
+},
+
+// Avatar 6
+{
+  name: "cat",
+  url: "images/Cat.png"
+},
+
+// Avatar 7
+{
+  name: "seal",
+  url: "images/Seal.png"
+},
+// Avatar 7
+{
+  name: "giraffe",
+  url: "images/Giraffe.png"
+}
+];
+
+var questionsArray = [
+// Question 0
+{
+  question: "What do you think a water footprint is?",
+  answers: [
+    {
+      isCorrect: true,
+      answerValue: "The amount of water used in the production or supply of goods and services used"
+    },
+    {
+      isCorrect: false,
+      answerValue: "A footprint in the mud" },
+    {
+      isCorrect: false,
+      answerValue: "How much water you drink over a certain period of time"
+    }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "The amount of water used in the production or supply of goods and services used."
+},
+
+// Question 1
+{
+  question:
+    "Good morning! Time to brush your teeth! About how much water do you think you use when you leave the tap on for 2 minutes?",
+  answers: [
+    { isCorrect: false, answerValue: "2 gallons" },
+    { isCorrect: true, answerValue: "3 gallons" },
+    { isCorrect: false, answerValue: "5 gallons" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "You will use about 3 gallons of water when you leave the tap running for 2 minutes."
+},
+
+// Question 2
+{
+  question:
+    "Breakfast time! You need to eat one fruit or veggie as part of your breakfast. Which do you think takes the least amount of water to produce?",
+  answers: [
+    { isCorrect: false, answerValue: "Mangoes" },
+    { isCorrect: false, answerValue: "Cabbage" },
+    { isCorrect: true, answerValue: "Apples" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "The correct answer was apples. Apples take 125 liters per kilogram. Mangoes take 1800 liters per kilogram. Cabbage takes 280 liters per kilogram. In case you were wondering, cabbage is a morning food in Korea."
+},
+
+// Question 3
+{
+  question:
+    "Oh no! Too many dirty dishes to handwash, let's use the dishwasher. About how much water does a modern dishwasher use?",
+  answers: [
+    { isCorrect: false, answerValue: "12 gallons" },
+    { isCorrect: false, answerValue: "7 gallons" },
+    { isCorrect: true, answerValue: "5 gallons" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "Newer dishwashers use around 5 gallons per load, while older ones can use more than 10 gallons. Did you know that washing the dishes in a sink can use up to 27 gallons of water?"
+},
+
+// Question 4
+{
+  question:
+    "You are taking your dog Spot for a walk. You need a water break! How much water do you save if you drink a gallon of water from a water fountain instead of from a plastic bottle?",
+  answers: [
+    { isCorrect: true, answerValue: "3 gallons" },
+    { isCorrect: false, answerValue: "2 gallons" },
+    { isCorrect: false, answerValue: "1 gallon" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "You save two gallons if you drink out of the tap or water fountain; it takes up to three times as much water to make the bottle than the amount it contains!"
+},
+
+// Question 5
+{
+  question:
+    "What time is it? Time for lunch! Which protein takes the least water to produce?",
+  answers: [
+    { isCorrect: false, answerValue: "Hamburger" },
+    { isCorrect: true, answerValue: "20 walnuts" },
+    { isCorrect: false, answerValue: "Rotisserie chicken" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "The correct answer is 20 walnuts. Although walnuts take less water to produce than the other options, they still take a lot of water. A Hamburger takes 1,300 gallons. Chicken takes 468 gallons per pound. 20 Walnuts take 100 gallons."
+},
+
+// Question 6
+/*
+{
+  question:
+    "Last year’s water bill was huge! You want buy a water-saving product. Which do you think saves the most water?",
+  answers: [
+    { isCorrect: false, answerValue: "Artificial turf" },
+    { isCorrect: true, answerValue: "Drip irrigation" },
+    { isCorrect: false, answerValue: "Succulents" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation: "TO DO"
+},
+*/
+
+//Question 7
+{
+  question:
+    "Ugh. Laundry?! Seriously? About how much water does it take to wash one load of laundry?",
+  answers: [
+    { isCorrect: true, answerValue: "20 gallons" },
+    { isCorrect: false, answerValue: "30 gallons" },
+    { isCorrect: false, answerValue: "40 gallons" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "It takes 20 gallons of water to wash one load of laundry."
+},
+
+//Question 8
+{
+  question:
+    "While we're talking about clothes, how much water does it take to make a pair of jeans?",
+  answers: [
+    { isCorrect: false, answerValue: "3,100 gallons" },
+    { isCorrect: false, answerValue: "590 gallons" },
+    { isCorrect: true, answerValue: "2,600 gallons" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "It takes 2,600 gallons to make a pair of jeans."
+},
+
+//Question 9
+/*{
+  question: "How much water does it take to make a pound of wool?",
+  answers: [
+    { isCorrect: false, answerValue: "300 gallons" },
+    { isCorrect: false, answerValue: "200 gallons" },
+    { isCorrect: true, answerValue: "100 gallons" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "It takes 101 gallons to make one pound of wool."
+},
+*/
+
+//Question 10
+{
+  question:
+    "We’re driving to Bob’s Diner for dinner! How much water does it take to manufacture an average car?",
+  answers: [
+    { isCorrect: false, answerValue: "9,000 gallons" },
+    { isCorrect: true, answerValue: "39,000 gallons" },
+    { isCorrect: false, answerValue: "105,000 gallons" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "The correct answer is 39,000 gallons. That’s even more than an average swimming pool which takes 19,000 gallons to fill."
+},
+
+//Question 11
+{
+  question:
+    "Time to order! Which entree do you think takes the least amount of water to produce?",
+  answers: [
+    { isCorrect: false, answerValue: "Hamburger" },
+    { isCorrect: false, answerValue: "3 pizza slices" },
+    { isCorrect: true, answerValue: "1/2 pound of spaghetti" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "The correct answer is spaghetti. 3 slices of pizza take 126 gallons. 1 burger takes 1,300 gallons. 1/2 pound of spaghetti takes 111 gallons."
+},
+
+//Question 12
+{
+  question:
+    "You want to catch your favorite TV show, but you have to shower first! How many gallons will you use for a 5 minute shower?",
+  answers: [
+    { isCorrect: true, answerValue: "10-11 gallons" },
+    { isCorrect: false, answerValue: "5-6 gallons" },
+    { isCorrect: false, answerValue: "15-16 gallons" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "It takes 10-11 gallons of water, when taking a 5 minute shower.  You can reduce the amount of water by using a low-flow showerhead!"
+},
+
+//Question 13
+{
+  question:
+    "Let's eat a midnight snack! Which nut takes the least amount of water to produce?",
+  answers: [
+    { isCorrect: false, answerValue: "Almonds" },
+    { isCorrect: false, answerValue: "Cashews" },
+    { isCorrect: true, answerValue: "Hazelnuts" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "The correct answer is hazelnuts; It takes 1,260 gallons to produce one pound of them. Cashews need 1,704 gallons and almonds need 1,929 gallons per pound."
+},
+
+//Question 14
+{
+  question:
+    "Recap! Were you paying attention? Let's see... Which of the following takes up the most water?",
+  answers: [
+    { isCorrect: false, answerValue: "5 minute shower" },
+    {
+      isCorrect: true, answerValue: "Producing one hamburger"
+    },
+    { isCorrect: false, answerValue: "Washing a load of clothes" }
+  ],
+  correctAnswerExplanation: "You earned 100 points!",
+  incorrectAnswerExplanation:
+    "The correct answer is producing one hamburger. Showers use around 10-11 gallons every 5 minutes. Washing machines use around 20 gallons per load. A hamburger takes around 1,300 gallons to produce.<br><br><img id='WaterFootPrintPieChartImage' src='https://mavensnotebook.com/wp-content/uploads/2015/09/Harter-slides_Page_102.jpg'></img>"
+  }
+];
+
+// Called at game start...
+function openingPage() {
+  document.getElementById("Report").style.display = "none";
+  document.getElementById("actionButton").style.display = "none";
+  document.getElementById("QuestionList").style.display = "none";
+  document.getElementById("AvatarOptions").style.display = "none";
+  document.getElementById("thumbsUp").style.display = "none";
+  document.getElementById("thumbsDown").style.display = "none";
+
+  //Opening page
+  document.getElementById("AvatarImage").src = defaultAvatarImage;
+
+  document.getElementById("TitleText").style.display = "none";
+
+  document.getElementById("logo").style.display = "block";
+
+  document.getElementById("actionButton").style.display = "block";
+  document.getElementById("actionButton").style.visibility = "hidden";
+  document.getElementById("actionButton").innerHTML = "Get Started!";
+  document.getElementById("actionButton").style.visibility = "visible";
+
+  document.getElementById("Report").style.display = "block";
+  document.getElementById("ReportText").innerHTML = openingPageReport;
+  document.getElementById("Report").style.visibility = "visible";
+
+  document.getElementById("Score").innerHTML = "Score:  0";
+
+  document.getElementById("actionButton").onclick = avatarPage;
+  document.getElementById("HomeButton").onclick = openingPage;
+
+  currentQuestion = 0;
+  currentScore = 0;
+}
+
+function avatarPage() {
+  document.getElementById("logo").style.display = "none";
+  document.getElementById("TitleText").style.display = "block";
+  document.getElementById("actionButton").style.display = "block";
+  document.getElementById("actionButton").style.visibility = "hidden";
+  document.getElementById("actionButton").innerHTML = "Next";
+  //document.getElementById("actionButton").style.visibility = "visible";
+
+  document.getElementById("Report").style.display = "none";
+  document.getElementById("TitleText").style.display = "none";
+  document.getElementById("TitleText").innerHTML = avatarTitle;
+  document.getElementById("TitleText").style.display = "block";
+
+  document.getElementById("AvatarOptions").style.display = "block";
+  document.getElementById("AvatarOptions").style.visibiliy = "hide";
+
+  for (i = 0; i <= avatarOptions.length; i++) {
+    document.getElementById(avatarOptions[i].name).src = avatarOptions[i].url;
+    document.getElementById(avatarOptions[i].name).onclick = setAvatar;
+  }
+
+  document.getElementById("AvatarOptions").style.visibiliy = "visible";
+}
+
+function setAvatar() {
+  //console.log(this.id);
+  for (i = 0; i <= avatarOptions.length; i++) {
+    if (avatarOptions[i].name == this.id) {
+      break;
+    }
+  }
+  document.getElementById("AvatarImage").src = avatarOptions[i].url;
+  document.getElementById("AvatarOptions").style.display = "none";
+  startQuestion();
+}
+
+function startQuestion() {
+  //Page before Questions
+
+  var actButton = document.getElementById("actionButton");
+
+  actButton.style.display = "block";
+  actButton.style.visibility = "visible";
+
+  document.getElementById("TitleText").style.visibility = "hidden";
+
+  //console.log(currentQuestion);
+  document.getElementById("QuestionList").style.visibility = "hidden";
+
+  document.getElementById("TitleText").innerHTML = startQuizTitle;
+  document.getElementById("TitleText").style.visibility = "visible";
+
+  //console.log(startQuizInstructions);
+  document.getElementById("ReportText").innerHTML = startQuizInstructions;
+  document.getElementById("Report").style.display = "block";
+  document.getElementById("TitleText").style.visibility = "visible";
+
+  actButton.innerHTML = "GO!";
+  actButton.style.display = "block";
+  actButton.onclick = nextQuestion;
+}
+
+function nextQuestion() {
+  //document.getElementById("Header").style.visibility = "hidden";
+  var actButton = document.getElementById("actionButton");
+  if (currentQuestion == questionsArray.length) {
+    endQuestion();
+  } else {
+    document.getElementById("Report").style.visibility = "hidden";
+    document.getElementById("Report").style.display = "none";
+    document.getElementById("thumbsDown").style.display = "none";
+    document.getElementById("thumbsUp").style.display = "none";
+    actButton.style.display = "none";
+    questionLoad();
+  }
+
+  document.getElementById("TitleText").style.visibility = "visible";
+  }
+
+function endQuestion() {
+  document.getElementById("thumbsUp").style.display = "none";
+  document.getElementById("thumbsDown").style.display = "none";
+
+  document.getElementById("TitleText").innerHTML = endQuizTitle;
+
+  document.getElementById("ReportText").innerHTML =
+    "You finished with... " + currentScore + " points!";
+
+  document.getElementById("actionButton").innerHTML = "Finish";
+  document.getElementById("actionButton").onclick = summary;
+}
+
+function summary() {
+  document.getElementById("TitleText").innerHTML = summaryPageTitle;
+
+  document.getElementById("ReportText").innerHTML = "Thanks For Playing!";
+
+  document.getElementById("actionButton").innerHTML = "Play Again";
+
+  document.getElementById("actionButton").onclick = openingPage;
+
+  currentQuestion = 0;
+}
+
+function questionLoad() {
+  document.getElementById("Score").innerHTML = "Score:  " + currentScore;
+
+  document.getElementById("TitleText").style.display = "block";
+  document.getElementById("TitleText").innerHTML =
+    questionsArray[currentQuestion].question;
+
+  var button1 = document.getElementById("Button1");
+  var button2 = document.getElementById("Button2");
+  var button3 = document.getElementById("Button3");
+  var currentQuestionEntry = questionsArray[currentQuestion];
+
+  button1.innerHTML = currentQuestionEntry.answers[0].answerValue;
+  button2.innerHTML = currentQuestionEntry.answers[1].answerValue;
+  button3.innerHTML = currentQuestionEntry.answers[2].answerValue;
+
+  //console.log("showing questions...");
+  document.getElementById("QuestionList").style.display = "block";
+  document.getElementById("QuestionList").style.visibility = "visible";
+
+  if (currentQuestionEntry.answers[0].isCorrect) {
+    button1.onclick = submitCorrectAnswer;
+  } else {
+    button1.onclick = submitIncorrectAnswer;
+  }
+  if (currentQuestionEntry.answers[1].isCorrect) {
+    button2.onclick = submitCorrectAnswer;
+  } else {
+    button2.onclick = submitIncorrectAnswer;
+  }
+  if (currentQuestionEntry.answers[2].isCorrect) {
+    button3.onclick = submitCorrectAnswer;
+  } else {
+    button3.onclick = submitIncorrectAnswer;
+  }
+}
+
+function submitCorrectAnswer() {
+  //console.log("Got to submitCorrectAnswer with currentQuestion now set to " + currentQuestion);
+
+  nextQuestion();
+  var currentQuestionEntry = questionsArray[currentQuestion];
+
+  currentScore += 100;
+  document.getElementById("Score").innerHTML = "Score: " + currentScore;
+
+  document.getElementById("QuestionList").style.display = "none";
+  document.getElementById("TitleText").style.display = "none";
+  document.getElementById("thumbsUp").style.display = "block";
+  document.getElementById("ReportText").innerHTML = currentQuestionEntry.incorrectAnswerExplanation;
+  document.getElementById("Report").style.display = "block";
+  document.getElementById("Report").style.visibility = "visible";
+  document.getElementById("actionButton").innerHTML = "Next";
+  document.getElementById("actionButton").style.display = "block";
+
+  currentQuestion++;
+}
+
+function submitIncorrectAnswer() {
+  //console.log("Got to submitIncorrectAnswer with currentQuestion now set to " + currentQuestion);
+  var currentQuestionEntry = questionsArray[currentQuestion];
+
+  nextQuestion();
+  document.getElementById("QuestionList").style.display = "none";
+  document.getElementById("TitleText").style.display = "none";
+  document.getElementById("thumbsDown").style.display = "block";
+  document.getElementById("ReportText").innerHTML = currentQuestionEntry.incorrectAnswerExplanation;
+  document.getElementById("Report").style.display = "block";
+  document.getElementById("Report").style.visibility = "visible";
+  document.getElementById("actionButton").innerHTML = "Next";
+  document.getElementById("actionButton").style.display = "block";
+
+  currentQuestion++;
+}
+
+
+</script>
+</head>
+
+<style>
+body {
+  margin:0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 36px;
+  background-color:  #40a4df; /* #e7efdd*/
+  color: white;  /*#40a4df*/
+  /*background-image: url("https://orig00.deviantart.net/38fa/f/2015/231/b/f/_kisekae__transparent_water_background_by_tshsuperstars-d96do3m.png");*/
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#Header {
+  background-color:  #40a4df; /* #5fdffc*/
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  color: white;
+  margin: 0;
+}
+
+#RectangleBorder {
+  background-color: /*rgba(32,166,231,.8)*/ #2577a8;
+  display: grid;
+  //box-shadow: 2px 2px 4px #00000040;
+}
+
+#TitleText {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  //font-weight: bold;
+  margin: auto;
+  margin-top: 20px;
+  max-width: 20em;
+  font-size: 100%;
+  text-align: center;
+  text-shadow: 2px 2px 4px #00000040;
+  padding: 10px;
+}
+
+button {
+  font-size: 30px;
+  background: orange;
+  color: white;
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  border-width: 0px;
+  border-radius: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  padding: 20px;
+  box-shadow: 4px 4px 8px #00000040;
+}
+
+#actionButton{
+  font-size: 30px;
+  width: 300px;
+}
+
+#Button1 {
+  min-width: 500px;
+  max-width: 500px;
+}
+
+#Button2 {
+  min-width: 500px;
+  max-width: 500px;
+}
+
+#Button3 {
+  min-width: 500px;
+  max-width: 500px;
+}
+
+#HomeButton{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+#HomeImage {
+  max-height:90px;
+  width: auto;
+  height: auto
+}
+
+#Avatar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+#AvatarImage {
+  max-height: 80px;
+  width: auto;
+  height: auto;
+}
+
+#Report {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+#ReportText {
+  text-align: center;
+  max-width: 25em;
+  text-shadow: 2px 2px 4px #00000040;
+  margin: 20px;
+}
+
+#AvatarOptions {
+  align-items: center;
+}
+
+#QuestionList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin: auto;
+}
+
+#thumbs {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+#thumbsUp {
+  padding: 20px;
+  max-width: 100px;
+}
+
+#thumbsDown {
+  padding: 20px;
+  max-width: 100px;
+}
+
+#logo {
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-clip: padding-box;
+}
+
+#logoImg {
+  max-width: 590px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+#Score {
+  font-size: 25;
+}
+
+#WaterFootPrintPieChartImage {
+  width: 60%;
+  height: auto;
+}
+
+  </style>
+
+<body onload = openingPage()>
+
+  <header>
+    <div id="Header">
+      <div id="HomeButton">
+        <img id="HomeImage" src="images/HomeButton.png" alt="Home">
+      </div>
+
+      <div id="Avatar">
+        <img id="AvatarImage" src="images/DefaultUser.png"  alt="Avatar">
+      </div>
+      <div id="Score">
+        <p>
+
+        </p>
+      </div>
+    </div>
+  </header>
+  <div style="height:5px;" id="RectangleBorder"></div>
+
+   <div id="TitleText">
+      Question 1
+    </div>
+  <div id = "logo">
+  <img id="logoImg" src="images/LogoImage.png">
+  </img>
+  </div>
+    <div id="thumbs">
+      <img id="thumbsUp" src="images/Thumbs-Up-Circle.png"></img>
+      <img id="thumbsDown" src="images/Thumbs-Down-Circle.png
+"></img>
+    </div>
+
+  <div id = "Report">
+    <center><p id="ReportText">Report </p></center>
+    </div>
+  <br>
+    <div id = "AvatarOptions" align="center" hspace=20>
+      <input id="panda" type="image"  width=100 height=100 hspace=20 vspace=20>
+      <input id="unicorn" type="image"  width=100 height=100 hspace=20 vspace=20>
+      <input id="elephant" type="image" width=100 height=100 hspace=20 vspace=20> <br>
+      <input id="lion" type="image"  width=100 height=100 hspace=20 vspace=20>
+      <input id ="monkey" type="image" width=100 height=100 hspace=20 vspace=20>
+      <input id ="penguin" type="image"  width=100 height=100 hspace=20 vspace=20> <br>
+      <input id ="cat" type="image"  width=100 height=100 hspace=20 vspace=20>
+      <input id ="seal" type="image" width=100 height=100 hspace=20 vspace=20>
+      <input id ="giraffe" type="image" width=100 height=100 hspace=20 vspace=20>
+    </div>
+    <div>
+      <button id = "actionButton"> Next </button>
+    </div>
+    <div id="QuestionList">
+      <button id="Button1">Answer 1</button>
+      <button id="Button2">Answer 2</button>
+      <button id="Button3">Answer 3</button>
+    </div>
+
+</body>
+</html>
