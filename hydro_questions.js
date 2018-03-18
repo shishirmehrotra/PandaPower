@@ -32,7 +32,7 @@ var questionsArray = [
   ],
   correctAnswerExplanation: "You earned 100 points!",
   incorrectAnswerExplanation:
-    "You will use about 3 gallons of water when you leave the tap running for 2 minutes.*turning off the tap will save about 1,092 gallons a year."
+    "You will use about 3 gallons of water when you leave the tap running for 2 minutes. Turning off the tap will save about 1,092 gallons a year."
 },
 
 // Question 2
