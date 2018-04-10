@@ -94,7 +94,11 @@ function openingPage() {
 
     initializeSound();
     initializeForm();
-
+  	//Set up Cordova
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+    	console.log(device.cordova);
+    }
     onAppLoad = false;
   }
 
@@ -348,7 +352,7 @@ function sound(src) {
 // Reocord Form Submit Code
 //
 function initializeForm() {
-
+	
   // Add score and ID elements to recordForm
   var form = document.getElementById("recordForm");
 	var scoreInput = document.createElement('input');
@@ -362,6 +366,12 @@ function initializeForm() {
 	generatedIDInput.name = 'generatedID';
 	generatedIDInput.value = "";
 	form.appendChild(generatedIDInput);
+	
+var generatedUUIDInput = document.createElement('input');
+	generatedIDInput.type = 'hidden';
+	generatedIDInput.name = 'generatedUUID';
+	generatedIDInput.value = device.uuid;
+	form.appendChild(generatedUUIDInput);
 
   // See if device has cookie, otherwise generate one/
   document.cookie = "test=testcookie";
@@ -387,6 +397,7 @@ function clearFormInputs() {
   document.getElementById("FeedbackInput").value ="";
   document.getElementById("recordForm").elements["score"].value = 0;
   document.getElementById("recordForm").elements["generatedID"].value = "";
+  document.getElementById("recordForm").elements["generatedUUID"].value = "";
 
   console.log()
 }
@@ -396,6 +407,8 @@ function submitFormData() {
 
   form.elements["score"].value = currentScore;
   form.elements["generatedID"].value = newGeneratedID;
+	form.elements["generatedUUID"].value = device.uuid;
+
 
 	form.submit();
 	clearFormInputs();
