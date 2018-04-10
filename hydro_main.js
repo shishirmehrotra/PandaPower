@@ -370,7 +370,7 @@ function initializeForm() {
 var generatedUUIDInput = document.createElement('input');
 	generatedIDInput.type = 'hidden';
 	generatedIDInput.name = 'generatedUUID';
-	generatedIDInput.value = device.uuid;
+	if (typeof device != 'undefined') {generatedIDInput.value = device.uuid;}
 	form.appendChild(generatedUUIDInput);
 
   // See if device has cookie, otherwise generate one/
@@ -407,7 +407,13 @@ function submitFormData() {
 
   form.elements["score"].value = currentScore;
   form.elements["generatedID"].value = newGeneratedID;
-	form.elements["generatedUUID"].value = device.uuid;
+	
+  if (typeof device != 'undefined') {
+		form.elements["generatedUUID"].value = device.uuid;	  
+  }
+	else {
+		form.elements["generatedUUID"].value = 0;	  
+	}
 
 
 	form.submit();
