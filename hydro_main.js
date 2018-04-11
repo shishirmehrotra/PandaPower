@@ -368,9 +368,9 @@ function initializeForm() {
 	form.appendChild(generatedIDInput);
 	
 var generatedUUIDInput = document.createElement('input');
-	generatedIDInput.type = 'hidden';
-	generatedIDInput.name = 'generatedUUID';
-	if (typeof device != 'undefined') {generatedIDInput.value = device.uuid;}
+	generatedUUIDInput.type = 'hidden';
+	generatedUUIDInput.name = 'generatedUUID';
+	if (typeof device != 'undefined') {generatedUUIDInput.value = device.uuid;}
 	form.appendChild(generatedUUIDInput);
 
   // See if device has cookie, otherwise generate one/
