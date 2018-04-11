@@ -126,7 +126,7 @@ function avatarPage() {
   document.getElementById("AvatarOptions").style.display = "block";
   document.getElementById("AvatarOptions").style.visibiliy = "hide";
 
-  for (i = 0; i <= avatarOptions.length; i++) {
+  for (i = 0; i < avatarOptions.length; i++) {
     document.getElementById(avatarOptions[i].name).src = avatarOptions[i].url;
     document.getElementById(avatarOptions[i].name).onclick = setAvatar;
   }
@@ -136,7 +136,7 @@ function avatarPage() {
 
 function setAvatar() {
   //console.log(this.id);
-  for (i = 0; i <= avatarOptions.length; i++) {
+  for (i = 0; i < avatarOptions.length; i++) {
     if (avatarOptions[i].name == this.id) {
       avatarSelected = i;
       break;
