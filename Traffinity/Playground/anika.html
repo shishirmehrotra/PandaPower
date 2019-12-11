@@ -15,37 +15,27 @@
       position: absolute;
       top: 200px;
       left: 450px;
-      transform: rotate(90deg);
+      /*transform: rotate(90deg);*/
     } 
+    .rotateUp
+    {   
+      transform: rotate(90deg); 
+    }
+
   </style>
-	<script>
-      function moveDown(amount) {
-        var car = document.getElementById("car1");	
-        car.style.top = parseFloat(getComputedStyle(car).top) + amount + "px";
-      }
-      function moveUp(amount) {
-        var car = document.getElementById("car1");	
-        car.style.top = parseFloat(getComputedStyle(car).top) - amount + "px";
-      }
-      function moveLeft(amount) {
-        var car = document.getElementById("car1");	
-        car.style.left = parseFloat(getComputedStyle(car).left) - amount + "px";
-      }
-      function moveRight(amount) {
-        var car = document.getElementById("car1");	
-        car.style.left = parseFloat(getComputedStyle(car).left) + amount + "px";
-      }
-  </script>
+
 </head>
 
 <body>
  
 
-		<button onClick="moveLeft(20)">Left</button>
-		<button onClick="moveRight(20)">Right</button>
-		<button onClick="moveDown(20)">Down</button>
-		<button onClick="moveUp(20)">Up</button>
-	<br>
+  <button onClick="moveLeft(20)">Left</button>
+  <button onClick="moveRight(20)">Right</button>
+  <button onClick="moveDown(20)">Down</button>
+  <button onClick="moveUp(20)">Up</button>
+  <input id="rotateSlider" type="range" min="-360" max="360"  />
+
+  <br>
 	
   <img src=
      "https://cl.ly/6c1c44d889d5/Group%205.png" 
@@ -55,5 +45,35 @@
 
   
 </body>
+	<script>
+function moveDown(amount) {
+  var car = document.getElementById("car1");	
+  car.style.top = parseFloat(getComputedStyle(car).top) + amount + "px";
+}
+function moveUp(amount) {
+  var car = document.getElementById("car1");	
+  car.style.top = parseFloat(getComputedStyle(car).top) - amount + "px";
+}
+function moveLeft(amount) {
+  var car = document.getElementById("car1");	
+  car.style.left = parseFloat(getComputedStyle(car).left) - amount + "px";
+}
+function moveRight(amount) {
+  var car = document.getElementById("car1");	
+  car.style.left = parseFloat(getComputedStyle(car).left) + amount + "px";
+}
+function rotate(value) {
+  var car = document.getElementById("car1");	
+  //car.classList.toggle("rotateUp");
+  car.style.transform = "rotate("+value+"deg)";
+}
+      
+var rotateSlider = document.getElementById("rotateSlider");
 
+rotateSlider.oninput = function() {
+  console.log("rotate to " + rotateSlider.value);
+  rotate(rotateSlider.value);
+}
+
+  </script>
 </html>
